@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-//import logo from './logo.svg';
-//import './App.css';
+import TodoBanner from "./TodoBanner";
+import TodoCreator from "./TodoCreator";
+import TodoRow from "./TodoRow";
 
 export default function App() {
 
@@ -13,22 +14,19 @@ export default function App() {
   ]);
   const [newItemText, setNewItemText] = useState("");
 
-  const updateNewTextValue = (e) => {
-    setNewItemText(e.target.value);
-  }
+  const createNewTodo = (task) => {
 
-  const createNewTodo = () => {
+    console.log(task);
 
     let data = {};
 
-    if (!todoItems.find(item => item.action === newItemText)) {
-      data = { action: newItemText, done: false };
+    if (!todoItems.find(item => item.action === task)) {
+      data = { action: task, done: false };
 
       const array_new = [...todoItems, data];
 
       setTodoItems(array_new);
       setNewItemText("");
-
     };
   }
 
@@ -40,37 +38,15 @@ export default function App() {
   const todoTableRows = () => {
 
     return (todoItems.map(item =>
-      
-      <tr key={item.action}>
-        <td> {item.action} </td>
-        <td>
-          <input
-            type="checkbox"
-            checked={item.done}
-            onChange={() => toggleTodo(item)}
-          />
-        </td>
-      </tr>
+     <TodoRow key={item.action} item={item} toggleTodo={toggleTodo} />
     ));
   }
   
   return (
     <div>
-      <h4 className="bg-primary text-white text-center p-2">
-        {userName} To Do List
-          ({todoItems.filter(t => !t.done).length} items to do)
-        </h4>
+      <TodoBanner userName={userName} todoItems={todoItems} />
       <div className="container-fluid">
-        <div className="my-1">
-          <input className="form-control"
-            value={newItemText}
-            onChange={updateNewTextValue}
-          />
-          <button className="btn btn-primary m-2"
-            onClick={createNewTodo}>
-            Add
-              </button>
-        </div>
+      <TodoCreator createNewTodo={createNewTodo} />
         <table className="table table-striped table-bordered">
           <thead>
             <tr><th>Description</th><th>Done</th></tr>
